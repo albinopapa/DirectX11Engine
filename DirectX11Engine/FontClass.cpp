@@ -165,96 +165,78 @@ ID3D11ShaderResourceView* FontClass::GetTexture()
 	return views[0];
 }
 
-
-void FontClass::BuildVertexArray(void* vertices, char* sentence, float drawX, float drawY)
+void FontClass::BuildVertexArray(void* vertices, std::string&& sentence, float drawX, float drawY)
 {
-	VertexType* vertexPtr;
-	int numLetters, index, i, letter;
-
-
 	// Coerce the input vertices into a VertexType structure.
-	vertexPtr = (VertexType*)vertices;
-
-	// Get the number of letters in the sentence.
-	numLetters = (int)strlen(sentence);
+	VertexType* vertexPtr = ( VertexType* )vertices;
 
 	// Initialize the index to the vertex array.
-	index = 0;
+	int index = 0;
+
+	auto SetVertex = [ &index, vertexPtr ]( const XMFLOAT3& Position, const XMFLOAT2& Texcoord )
+	{
+		vertexPtr[ index ].position = Position;
+		vertexPtr[ index ].texture = Texcoord;
+		++index;
+	};
 
 	// Draw each letter onto a quad.
-	for (i = 0; i<numLetters; i++)
-	{
-		letter = ((int)sentence[i]) - 32;
+	const auto str = std::move( sentence );
+	const auto left = drawX;
+	const auto top = drawY;
+	const auto bottom = drawY - _fontHeight;
 
-		// If the letter is a space then just move over three pixels.
+	for (const auto c : str )
+	{
+		const auto letter = c - 32;
+
+		// If the letter is a space then just move over three pixels.		
 		if (letter == 0)
 		{
 			drawX = drawX + (float)_spaceSize;
+			continue;
 		}
-		else
-		{
-			// First triangle in quad.
-			vertexPtr[index].position = XMFLOAT3(drawX, drawY, 0.0f);  // Top left.
-			vertexPtr[index].texture = XMFLOAT2(_Font[letter].left, 0.0f);
-			index++;
 
-			vertexPtr[index].position = XMFLOAT3((drawX + _Font[letter].size), (drawY - _fontHeight), 0.0f);  // Bottom right.
-			vertexPtr[index].texture = XMFLOAT2(_Font[letter].right, 1.0f);
-			index++;
+		const auto& type = _Font[ letter ];
+		const auto right = drawX + type.size;
 
-			vertexPtr[index].position = XMFLOAT3(drawX, (drawY - _fontHeight), 0.0f);  // Bottom left.
-			vertexPtr[index].texture = XMFLOAT2(_Font[letter].left, 1.0f);
-			index++;
+		// First triangle in quad.
+		// Top left.
+		SetVertex( XMFLOAT3( left, top, 0.0f ), XMFLOAT2( type.left, 0.0f ) );
+		// Bottom right.
+		SetVertex( XMFLOAT3( right, bottom, 0.0f ), XMFLOAT2( type.right, 1.0f ) );
+		// Bottom left.
+		SetVertex( XMFLOAT3( left, bottom, 0.f ), XMFLOAT2( type.left, 1.0f ) );
 
-			// Second triangle in quad.
-			vertexPtr[index].position = XMFLOAT3(drawX, drawY, 0.0f);  // Top left.
-			vertexPtr[index].texture = XMFLOAT2(_Font[letter].left, 0.0f);
-			index++;
+		// Second triangle in quad.
+		// Top left.
+		SetVertex( XMFLOAT3( top, left, 0.0f ), XMFLOAT2( type.left, 0.0f ) );
+		// Top right.
+		SetVertex( XMFLOAT3( right, top, 0.f ), XMFLOAT2( type.right, 0.f ) );
+		// Bottom right.
+		SetVertex( XMFLOAT3( right, bottom, 0.f ), XMFLOAT2( type.right, 1.f ) );
 
-			vertexPtr[index].position = XMFLOAT3(drawX + _Font[letter].size, drawY, 0.0f);  // Top right.
-			vertexPtr[index].texture = XMFLOAT2(_Font[letter].right, 0.0f);
-			index++;
-
-			vertexPtr[index].position = XMFLOAT3((drawX + _Font[letter].size), (drawY - _fontHeight), 0.0f);  // Bottom right.
-			vertexPtr[index].texture = XMFLOAT2(_Font[letter].right, 1.0f);
-			index++;
-
-			// Update the x location for drawing by the size of the letter and one pixel.
-			drawX = drawX + _Font[letter].size + 1.0f;
-		}
+		// Update the x location for drawing by the size of the letter and one pixel.
+		drawX += ( type.size + 1 );
 	}
-
-	return;
 }
 
-
-int FontClass::GetSentencePixelLength(char* sentence)
+int FontClass::GetSentencePixelLength( const std::string& sentence )const
 {
-	int pixelLength, numLetters, i, letter;
+	int pixelLength = 0;
 
-
-	pixelLength = 0;
-	numLetters = (int)strlen(sentence);
-
-	for (i = 0; i<numLetters; i++)
+	for( const auto c : sentence )
 	{
-		letter = ((int)sentence[i]) - 32;
+		const auto letter = c - 32;
 
 		// If the letter is a space then count it as three pixels.
-		if (letter == 0)
-		{
-			pixelLength += _spaceSize;
-		}
-		else
-		{
-			pixelLength += (_Font[letter].size + 1);
-		}
+		pixelLength += letter == 0 ? _spaceSize : ( _Font[ letter ].size + 1 );
 	}
 
 	return pixelLength;
 }
 
-int FontClass::GetFontHeight()
+int FontClass::GetFontHeight()const
 {
 	return (int)_fontHeight;
 }

@@ -47,9 +47,9 @@ public:
 	void Shutdown();
 
 	ID3D11ShaderResourceView* GetTexture();
-	void BuildVertexArray(void*, char*, float, float);
-	int GetSentencePixelLength(char*);
-	int GetFontHeight();
+	void BuildVertexArray(void*, std::string&&, float, float);
+	int GetSentencePixelLength( const std::string& sentence )const;
+	int GetFontHeight()const;
 
 private:
 	bool LoadFontData(char*);

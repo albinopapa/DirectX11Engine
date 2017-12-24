@@ -17,9 +17,14 @@ class LightClass : public Actor
 {
 public:
 	LightClass();
-	LightClass(const LightClass&);
-	~LightClass();
 
+	void Initialize(
+		const XMFLOAT4& Diffuse,
+		const XMFLOAT4& Ambient,
+		const XMFLOAT4& Specular,
+		const XMFLOAT4& Position,
+		const XMFLOAT3& Direction,
+		float SpecularPower );
 	void SetAmbientColor(float, float, float, float);
 	void SetDiffuseColor(float, float, float, float);
 	void SetPosition(float x, float y, float z);

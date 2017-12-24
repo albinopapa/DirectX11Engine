@@ -11,6 +11,7 @@ const int NUM_LIGHTS = 4;
 //////////////
 // INCLUDES //
 //////////////
+#include "GlobalIncludes.h"
 #include "ShaderClass.h"
 #include "LightClass.h"
 
@@ -65,26 +66,51 @@ private:
 
 public:
 	LightShaderClass();
-	LightShaderClass(const LightShaderClass&);
-	~LightShaderClass();
+	LightShaderClass(const LightShaderClass&) = delete;
 
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-		XMMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor, XMFLOAT4 diffuseColor, 
-		LightClass* lights[],
-		XMFLOAT3 cameraPosition, XMFLOAT4 specularColor, float specularPower, float fogStart, float fogEnd, XMFLOAT4 clipPlane, float translation, float transparency);
+	void Render(
+		ID3D11DeviceContext* deviceContext,
+		int indexCount,
+		XMMATRIX worldMatrix,
+		XMMATRIX viewMatrix,
+		XMMATRIX projectionMatrix,
+		ID3D11ShaderResourceView** textureArray,
+		XMFLOAT3 lightDirection,
+		XMFLOAT4 ambientColor,
+		XMFLOAT4 diffuseColor,
+		const std::vector<std::unique_ptr<LightClass>>& lights,
+		XMFLOAT3 cameraPosition,
+		XMFLOAT4 specularColor,
+		float specularPower,
+		float fogStart,
+		float fogEnd,
+		XMFLOAT4 clipPlane,
+		float translation,
+		float transparency );
 
 private:
-	bool InitializeShader(ID3D11Device*, HWND, char*, char*);
-	virtual void ShutdownShader() override;
+	void InitializeShader(ID3D11Device*, HWND, char*, char*);
 
-	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView** textureArray, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor, XMFLOAT4 diffuseColor,
-		LightClass* lights[],
-		XMFLOAT3 cameraPosition, XMFLOAT4 specularColor, float specularPower, float fogStart, float fogEnd, XMFLOAT4 clipPlane, float texTranslation, float transparency);
+	void SetShaderParameters(
+		ID3D11DeviceContext*,
+		XMMATRIX,
+		XMMATRIX,
+		XMMATRIX,
+		ID3D11ShaderResourceView** textureArray,
+		XMFLOAT3 lightDirection,
+		XMFLOAT4 ambientColor,
+		XMFLOAT4 diffuseColor,
+		const std::vector<std::unique_ptr<LightClass>>& lights,
+		XMFLOAT3 cameraPosition,
+		XMFLOAT4 specularColor,
+		float specularPower,
+		float fogStart,
+		float fogEnd,
+		XMFLOAT4 clipPlane,
+		float texTranslation,
+		float transparency );
 
 private:
-	vector<D3D11_BUFFER_DESC> _bufferDescs;
-	const int _numBufferDescs = 9;
-
 	vector<Microsoft::WRL::ComPtr <ID3D11Buffer>> _buffers;
 
 	Microsoft::WRL::ComPtr <ID3D11Buffer> _cameraBuffer;

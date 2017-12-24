@@ -21,17 +21,27 @@ private:
 
 public:
 	FontShaderClass();
-	FontShaderClass(const FontShaderClass&);
-	~FontShaderClass();
+	FontShaderClass( const FontShaderClass& ) = delete;
 
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-		XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColor);
+	void Render(
+		ID3D11DeviceContext* deviceContext,
+		int indexCount,
+		XMMATRIX worldMatrix,
+		XMMATRIX viewMatrix,
+		XMMATRIX projectionMatrix,
+		ID3D11ShaderResourceView* texture,
+		XMFLOAT4 pixelColor );
 
 private:
-	bool InitializeShader(ID3D11Device*, HWND, char*, char*);
-	virtual void ShutdownShader() override;
-	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT4);
+	void InitializeShader( ID3D11Device*, char*, char* ) override;
+	void SetShaderParameters(
+		ID3D11DeviceContext*,
+		XMMATRIX,
+		XMMATRIX,
+		XMMATRIX,
+		ID3D11ShaderResourceView*,
+		XMFLOAT4 );
 
 private:
-	ID3D11Buffer* _pixelBuffer;
+	ComPtr<ID3D11Buffer> _pixelBuffer;
 };

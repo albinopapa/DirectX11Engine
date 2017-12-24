@@ -23,12 +23,9 @@ TextClass::~TextClass()
 }
 
 
-bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int screenWidth, int screenHeight, int maxLength,
+void TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int screenWidth, int screenHeight, int maxLength,
 	bool shadow, FontClass* Font, char* text, int positionX, int positionY, float red, float green, float blue)
 {
-	bool result;
-
-
 	// Store the screen width and height.
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;
@@ -40,13 +37,7 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 //	m_shadow = shadow;
 
 	// Initalize the sentence.
-	result = InitializeSentence(device, deviceContext, Font, text, positionX, positionY, red, green, blue);
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
+	InitializeSentence(device, deviceContext, Font, text, positionX, positionY, red, green, blue);
 }
 
 
@@ -212,7 +203,7 @@ bool TextClass::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* de
 	indices = 0;
 
 	// Now add the text data to the sentence buffers.
-	result = UpdateSentence(deviceContext, Font, text, positionX, positionY, red, green, blue);
+	UpdateSentence(deviceContext, Font, text, positionX, positionY, red, green, blue);
 	if (!result)
 	{
 		return false;
@@ -222,10 +213,16 @@ bool TextClass::InitializeSentence(ID3D11Device* device, ID3D11DeviceContext* de
 }
 
 
-bool TextClass::UpdateSentence(ID3D11DeviceContext* deviceContext, FontClass* Font, char* text, int positionX, int positionY, float red,
-	float green, float blue)
+void TextClass::UpdateSentence(
+	ID3D11DeviceContext* deviceContext, 
+	FontClass* Font, 
+	string&& text, 
+	int positionX, 
+	int positionY, 
+	float red,
+	float green, 
+	float blue)
 {
-	int numLetters;
 	VertexType* vertices;
 	float drawX, drawY;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -237,19 +234,19 @@ bool TextClass::UpdateSentence(ID3D11DeviceContext* deviceContext, FontClass* Fo
 	m_pixelColor = XMFLOAT4(red, green, blue, 1.0f);
 
 	// Get the number of letters in the sentence.
-	numLetters = (int)strlen(text);
+	int numLetters = ( int )text.length();
 
 	// Check for possible buffer overflow.
 	if (numLetters > m_maxLength)
 	{
-		return false;
+		return;
 	}
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
 	if (!vertices)
 	{
-		return false;
+		return;
 	}
 
 	// Initialize vertex array to zeros at first.
@@ -300,8 +297,6 @@ bool TextClass::UpdateSentence(ID3D11DeviceContext* deviceContext, FontClass* Fo
 	// Release the vertex array as it is no longer needed.
 	delete[] vertices;
 	vertices = 0;
-
-	return true;
 }
 
 // HIS @CUSTOM

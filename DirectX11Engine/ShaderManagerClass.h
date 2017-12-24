@@ -29,16 +29,34 @@ class ShaderManagerClass
 {
 public:
 	ShaderManagerClass();
-	ShaderManagerClass(const ShaderManagerClass&);
-	~ShaderManagerClass();
+	ShaderManagerClass(const ShaderManagerClass&) = delete;
 
-	bool Initialize(ID3D11Device*, HWND);
+	void Initialize(ID3D11Device*);
 
-	bool Render(ID3D11DeviceContext* device, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, Material* material, LightClass* light, LightClass* lights[], SceneEffects effects,
-		XMFLOAT3 cameraPos = XMFLOAT3(0,0,0), XMMATRIX reflectionMatrix = XMMatrixIdentity(), ID3D11ShaderResourceView * reflectionTexture = nullptr, ID3D11ShaderResourceView * refractionTexture = nullptr, ID3D11ShaderResourceView * normalTexture = nullptr);
+	void Render(
+		ID3D11DeviceContext* device, 
+		int indexCount, 
+		XMMATRIX worldMatrix, 
+		XMMATRIX viewMatrix, 
+		XMMATRIX projectionMatrix, 
+		Material* material, 
+		LightClass* light, 
+		const std::vector<std::unique_ptr<LightClass>>& lights,
+		SceneEffects effects,
+		XMFLOAT3 cameraPos = XMFLOAT3(0,0,0), 
+		XMMATRIX reflectionMatrix = XMMatrixIdentity(), 
+		ID3D11ShaderResourceView * reflectionTexture = nullptr, 
+		ID3D11ShaderResourceView * refractionTexture = nullptr, 
+		ID3D11ShaderResourceView * normalTexture = nullptr);
 
-	bool RenderFontShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-		XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColor);
+	void RenderFontShader(
+		ID3D11DeviceContext* deviceContext,
+		int indexCount,
+		XMMATRIX worldMatrix,
+		XMMATRIX viewMatrix,
+		XMMATRIX projectionMatrix,
+		ID3D11ShaderResourceView* texture,
+		XMFLOAT4 pixelColor );
 
 	FontShaderClass* GetFontShader();
 

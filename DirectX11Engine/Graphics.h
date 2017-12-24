@@ -38,32 +38,46 @@ class Graphics
 {
 public:
 	Graphics();
-	Graphics(const Graphics&);
+	Graphics(const Graphics&) = delete;
 	~Graphics();
 
 	// Create the D3DClass object and call the D3DClass Initialize function.
-	bool Initialize(int screenWidth, int screenHeight, HWND hwnd, Scene* scene);
-	bool InitializeLights(Scene* pScene);
-	bool InitializeModels(const HWND &hwnd, int screenWidth, int screenHeight, vector<unique_ptr<Actor>>* sceneActors);
-	bool InitializeUI(int screenWidth, int screenHeight);
-	bool UpdateFrame(float frameTime, class Scene* scene, int fps);
+	void Initialize(int screenWidth, int screenHeight, HWND hwnd, Scene* scene);
+	void InitializeLights(Scene* pScene);
+	void InitializeModels(const HWND &hwnd, int screenWidth, int screenHeight, vector<unique_ptr<Actor>>& sceneActors);
+	void InitializeUI(int screenWidth, int screenHeight);
+	void UpdateFrame(float frameTime, class Scene* scene, int fps);
 
-	bool DrawFrame(vector<unique_ptr<Actor>>* sceneActors, float frameTime);
+	void DrawFrame(const vector<unique_ptr<Actor>>& sceneActors, float frameTime);
 
-	bool RenderRefractionToTexture(float surfaceHeight);
+	void RenderRefractionToTexture(float surfaceHeight);
 
 	void RenderText();
 
-	inline D3DClass* GetD3D()const { return _D3D.get();}
-	inline Camera* GetCamera() const { return _Camera.get(); }
-	bool UpdateRenderCounts(ID3D11DeviceContext*, int, int, int);
+	D3DClass& GetD3D()
+	{
+		return *_D3D;
+	}
+	const D3DClass& GetD3D()const
+	{
+		return *_D3D;
+	};
+	Camera& GetCamera()
+	{
+		return *_Camera;
+	}
+	const Camera& GetCamera()const 
+	{ 
+		return *_Camera; 
+	}
+	void UpdateRenderCounts(ID3D11DeviceContext*, int, int, int);
 
 private:
-	bool RenderReflectionToTexture();
-	bool RenderScene(vector<unique_ptr<Actor>>* sceneActors, float frameTime);
+	void RenderReflectionToTexture();
+	void RenderScene(const vector<unique_ptr<Actor>>& sceneActors, float frameTime);
 
-	bool UpdateFpsString(ID3D11DeviceContext*, int);
-	bool UpdatePositionStrings(ID3D11DeviceContext*, float, float, float, float, float, float);
+	void UpdateFpsString(ID3D11DeviceContext*, int);
+	void UpdatePositionStrings(ID3D11DeviceContext*, float, float, float, float, float, float);
 
 private:
 	unique_ptr<D3DClass> _D3D;

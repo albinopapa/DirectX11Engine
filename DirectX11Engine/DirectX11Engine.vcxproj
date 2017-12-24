@@ -72,19 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\n\Documents\Visual Studio 2017\Projects\DirectX11Engine\DirectX11Engine\BULLET;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)BULLET;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\n\Documents\Visual Studio 2017\Projects\DirectX11Engine\DirectX11Engine\BULLET;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)BULLET;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\n\Documents\Visual Studio 2017\Projects\DirectX11Engine\DirectX11Engine\BULLET;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)BULLET;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\n\Documents\Visual Studio 2017\Projects\DirectX11Engine\DirectX11Engine\BULLET;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)BULLET;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -309,6 +309,7 @@
     <ClCompile Include="RefractionShaderClass.cpp" />
     <ClCompile Include="RenderTextureClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
+    <ClCompile Include="ShaderCompiler.cpp" />
     <ClCompile Include="ShaderManagerClass.cpp" />
     <ClCompile Include="TextClass.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -557,6 +558,7 @@
     <ClInclude Include="RefractionShaderClass.h" />
     <ClInclude Include="RenderTextureClass.h" />
     <ClInclude Include="ShaderClass.h" />
+    <ClInclude Include="ShaderCompiler.h" />
     <ClInclude Include="ShaderManagerClass.h" />
     <ClInclude Include="TextClass.h" />
     <ClInclude Include="Texture.h" />

@@ -16,16 +16,24 @@ class TextureShaderClass:public ShaderClass
 {
 public:
 	TextureShaderClass();
-	TextureShaderClass(const TextureShaderClass&);
-	~TextureShaderClass();
+	TextureShaderClass(const TextureShaderClass&) = delete;
 
-	/** pass in the name of the HLSL shader files inside this function */
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture);
+	void Render(
+		ID3D11DeviceContext* deviceContext, 
+		int indexCount, 
+		XMMATRIX worldMatrix, 
+		XMMATRIX viewMatrix, 
+		XMMATRIX projectionMatrix, 
+		ID3D11ShaderResourceView* texture);
 
 private:
 	/** actually loads the shader files and makes it usable to DirectX and the GPU. */
-	virtual bool InitializeShader(ID3D11Device* device, HWND hwnd, char* vsFileName, char* psFileName) override;
-	virtual void ShutdownShader() override;
+	void InitializeShader( ID3D11Device* device, char* vsFileName, char* psFileName ) override;
 
-	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture);
+	void SetShaderParameters(
+		ID3D11DeviceContext*,
+		XMMATRIX worldMatrix,
+		XMMATRIX viewMatrix,
+		XMMATRIX projectionMatrix,
+		ID3D11ShaderResourceView* texture );
 };
